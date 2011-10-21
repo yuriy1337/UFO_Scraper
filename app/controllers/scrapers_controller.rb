@@ -94,9 +94,6 @@ class ScrapersController < ApplicationController
                 lat_deg = matches[0][0]
                 lat_min = matches[1][0]
                 lat_sec = matches[2][0]
-                puts lat_deg
-                puts lat_min
-                puts lat_sec
               end
               if(td_count == 6)
                 lon_dir = td.inner_html[0]
