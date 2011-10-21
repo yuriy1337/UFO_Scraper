@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Icao:</b>
+  <%= @airport.icao %>
+</p>
+
+<p>
+  <b>Iata:</b>
+  <%= @airport.iata %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @airport.name %>
+</p>
+
+<p>
+  <b>Cities:</b>
+  <%= @airport.cities_id %>
+</p>
+
+<p>
+  <b>Lat deg:</b>
+  <%= @airport.lat_deg %>
+</p>
+
+<p>
+  <b>Lat min:</b>
+  <%= @airport.lat_min %>
+</p>
+
+<p>
+  <b>Lat sec:</b>
+  <%= @airport.lat_sec %>
+</p>
+
+<p>
+  <b>Lat dir:</b>
+  <%= @airport.lat_dir %>
+</p>
+
+<p>
+  <b>Lon deg:</b>
+  <%= @airport.lon_deg %>
+</p>
+
+<p>
+  <b>Lon min:</b>
+  <%= @airport.lon_min %>
+</p>
+
+<p>
+  <b>Lon sec:</b>
+  <%= @airport.lon_sec %>
+</p>
+
+<p>
+  <b>Lon dir:</b>
+  <%= @airport.lon_dir %>
+</p>
+
+<p>
+  <b>Altitude:</b>
+  <%= @airport.altitude %>
+</p>
+
+
+<%= link_to 'Edit', edit_airport_path(@airport) %> |
+<%= link_to 'Back', airports_path %>

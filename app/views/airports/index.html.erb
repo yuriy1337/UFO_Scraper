@@ -1,0 +1,47 @@
+<h1>Listing airports</h1>
+
+<table>
+  <tr>
+    <th>Icao</th>
+    <th>Iata</th>
+    <th>Name</th>
+    <th>Cities</th>
+    <th>Lat deg</th>
+    <th>Lat min</th>
+    <th>Lat sec</th>
+    <th>Lat dir</th>
+    <th>Lon deg</th>
+    <th>Lon min</th>
+    <th>Lon sec</th>
+    <th>Lon dir</th>
+    <th>Altitude</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @airports.each do |airport| %>
+  <tr>
+    <td><%= airport.icao %></td>
+    <td><%= airport.iata %></td>
+    <td><%= airport.name %></td>
+    <td><%= airport.cities_id %></td>
+    <td><%= airport.lat_deg %></td>
+    <td><%= airport.lat_min %></td>
+    <td><%= airport.lat_sec %></td>
+    <td><%= airport.lat_dir %></td>
+    <td><%= airport.lon_deg %></td>
+    <td><%= airport.lon_min %></td>
+    <td><%= airport.lon_sec %></td>
+    <td><%= airport.lon_dir %></td>
+    <td><%= airport.altitude %></td>
+    <td><%= link_to 'Show', airport %></td>
+    <td><%= link_to 'Edit', edit_airport_path(airport) %></td>
+    <td><%= link_to 'Destroy', airport, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Airport', new_airport_path %>

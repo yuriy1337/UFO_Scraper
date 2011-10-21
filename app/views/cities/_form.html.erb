@@ -1,0 +1,81 @@
+<%= form_for(@city) do |f| %>
+  <% if @city.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@city.errors.count, "error") %> prohibited this city from being saved:</h2>
+
+      <ul>
+      <% @city.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_area :name %>
+  </div>
+  <div class="field">
+    <%= f.label :states_id %><br />
+    <%= f.text_field :states_id %>
+  </div>
+  <div class="field">
+    <%= f.label :total_area %><br />
+    <%= f.text_field :total_area %>
+  </div>
+  <div class="field">
+    <%= f.label :water_area %><br />
+    <%= f.text_field :water_area %>
+  </div>
+  <div class="field">
+    <%= f.label :land_area %><br />
+    <%= f.text_field :land_area %>
+  </div>
+  <div class="field">
+    <%= f.label :population %><br />
+    <%= f.text_field :population %>
+  </div>
+  <div class="field">
+    <%= f.label :population_density %><br />
+    <%= f.text_field :population_density %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_deg %><br />
+    <%= f.text_field :lat_deg %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_min %><br />
+    <%= f.text_field :lat_min %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_sec %><br />
+    <%= f.text_field :lat_sec %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_dir %><br />
+    <%= f.text_area :lat_dir %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_deg %><br />
+    <%= f.text_field :lon_deg %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_min %><br />
+    <%= f.text_field :lon_min %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_sec %><br />
+    <%= f.text_field :lon_sec %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_dir %><br />
+    <%= f.text_area :lon_dir %>
+  </div>
+  <div class="field">
+    <%= f.label :elevation %><br />
+    <%= f.text_field :elevation %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

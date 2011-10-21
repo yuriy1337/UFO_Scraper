@@ -1,0 +1,85 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @city.name %>
+</p>
+
+<p>
+  <b>States:</b>
+  <%= @city.states_id %>
+</p>
+
+<p>
+  <b>Total area:</b>
+  <%= @city.total_area %>
+</p>
+
+<p>
+  <b>Water area:</b>
+  <%= @city.water_area %>
+</p>
+
+<p>
+  <b>Land area:</b>
+  <%= @city.land_area %>
+</p>
+
+<p>
+  <b>Population:</b>
+  <%= @city.population %>
+</p>
+
+<p>
+  <b>Population density:</b>
+  <%= @city.population_density %>
+</p>
+
+<p>
+  <b>Lat deg:</b>
+  <%= @city.lat_deg %>
+</p>
+
+<p>
+  <b>Lat min:</b>
+  <%= @city.lat_min %>
+</p>
+
+<p>
+  <b>Lat sec:</b>
+  <%= @city.lat_sec %>
+</p>
+
+<p>
+  <b>Lat dir:</b>
+  <%= @city.lat_dir %>
+</p>
+
+<p>
+  <b>Lon deg:</b>
+  <%= @city.lon_deg %>
+</p>
+
+<p>
+  <b>Lon min:</b>
+  <%= @city.lon_min %>
+</p>
+
+<p>
+  <b>Lon sec:</b>
+  <%= @city.lon_sec %>
+</p>
+
+<p>
+  <b>Lon dir:</b>
+  <%= @city.lon_dir %>
+</p>
+
+<p>
+  <b>Elevation:</b>
+  <%= @city.elevation %>
+</p>
+
+
+<%= link_to 'Edit', edit_city_path(@city) %> |
+<%= link_to 'Back', cities_path %>

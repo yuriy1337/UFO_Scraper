@@ -1,0 +1,37 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyText
+  states_id: 1
+  total_area: 9.99
+  water_area: 9.99
+  land_area: 9.99
+  population: 1
+  population_density: 9.99
+  lat_deg: 1
+  lat_min: 1
+  lat_sec: 1
+  lat_dir: MyText
+  lon_deg: 1
+  lon_min: 1
+  lon_sec: 1
+  lon_dir: MyText
+  elevation: 1
+
+two:
+  name: MyText
+  states_id: 1
+  total_area: 9.99
+  water_area: 9.99
+  land_area: 9.99
+  population: 1
+  population_density: 9.99
+  lat_deg: 1
+  lat_min: 1
+  lat_sec: 1
+  lat_dir: MyText
+  lon_deg: 1
+  lon_min: 1
+  lon_sec: 1
+  lon_dir: MyText
+  elevation: 1

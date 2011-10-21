@@ -1,0 +1,53 @@
+<h1>Listing cities</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>States</th>
+    <th>Total area</th>
+    <th>Water area</th>
+    <th>Land area</th>
+    <th>Population</th>
+    <th>Population density</th>
+    <th>Lat deg</th>
+    <th>Lat min</th>
+    <th>Lat sec</th>
+    <th>Lat dir</th>
+    <th>Lon deg</th>
+    <th>Lon min</th>
+    <th>Lon sec</th>
+    <th>Lon dir</th>
+    <th>Elevation</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @cities.each do |city| %>
+  <tr>
+    <td><%= city.name %></td>
+    <td><%= city.states_id %></td>
+    <td><%= city.total_area %></td>
+    <td><%= city.water_area %></td>
+    <td><%= city.land_area %></td>
+    <td><%= city.population %></td>
+    <td><%= city.population_density %></td>
+    <td><%= city.lat_deg %></td>
+    <td><%= city.lat_min %></td>
+    <td><%= city.lat_sec %></td>
+    <td><%= city.lat_dir %></td>
+    <td><%= city.lon_deg %></td>
+    <td><%= city.lon_min %></td>
+    <td><%= city.lon_sec %></td>
+    <td><%= city.lon_dir %></td>
+    <td><%= city.elevation %></td>
+    <td><%= link_to 'Show', city %></td>
+    <td><%= link_to 'Edit', edit_city_path(city) %></td>
+    <td><%= link_to 'Destroy', city, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New City', new_city_path %>

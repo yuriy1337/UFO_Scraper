@@ -1,0 +1,69 @@
+<%= form_for(@airport) do |f| %>
+  <% if @airport.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@airport.errors.count, "error") %> prohibited this airport from being saved:</h2>
+
+      <ul>
+      <% @airport.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :icao %><br />
+    <%= f.text_field :icao %>
+  </div>
+  <div class="field">
+    <%= f.label :iata %><br />
+    <%= f.text_field :iata %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_area :name %>
+  </div>
+  <div class="field">
+    <%= f.label :cities_id %><br />
+    <%= f.text_field :cities_id %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_deg %><br />
+    <%= f.text_field :lat_deg %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_min %><br />
+    <%= f.text_field :lat_min %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_sec %><br />
+    <%= f.text_field :lat_sec %>
+  </div>
+  <div class="field">
+    <%= f.label :lat_dir %><br />
+    <%= f.text_field :lat_dir %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_deg %><br />
+    <%= f.text_field :lon_deg %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_min %><br />
+    <%= f.text_field :lon_min %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_sec %><br />
+    <%= f.text_field :lon_sec %>
+  </div>
+  <div class="field">
+    <%= f.label :lon_dir %><br />
+    <%= f.text_field :lon_dir %>
+  </div>
+  <div class="field">
+    <%= f.label :altitude %><br />
+    <%= f.text_field :altitude %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
