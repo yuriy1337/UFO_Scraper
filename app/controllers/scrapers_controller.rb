@@ -34,7 +34,7 @@ class ScrapersController < ApplicationController
           #its a state
           puts "State: #{row[2]}"
           state_name = row[2]
-          state = State.new(:name => row[0])
+          state = State.new(:name => row[2])
           if(@states.length == 50)
             break
           end
