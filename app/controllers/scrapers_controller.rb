@@ -1,3 +1,4 @@
+$KCODE = "UTF-8"
 class ScrapersController < ApplicationController
   require 'csv'
   require 'net/http'
@@ -81,7 +82,7 @@ class ScrapersController < ApplicationController
                   #puts "#{small.inner_html}"
                   #puts "!!!!!!!!!!!!!!!!!!"
                   pop_elev = small.inner_html
-                  population = "#{pop_elev.match(/\d+,\d*/)}".gsub(/,/,'')
+                  #population = "#{pop_elev.match(/\d+,\d*/)}".gsub(/,/,'')
                   elevation = "#{pop_elev.match(/\d+m/)}".gsub(/m/,'')
                   #puts population
                   #puts elevation
@@ -89,15 +90,20 @@ class ScrapersController < ApplicationController
               end
               if(td_count == 5)
                 lat_dir = td.inner_html[0]
-                lat_deg = td.inner_html[2..3]
-                lat_min = td.inner_html[6..7]
-                lat_sec = td.inner_html[10..11]
+                matches = td.inner_html.scan(/(\d+)/)
+                lat_deg = matches[0][0]
+                lat_min = matches[1][0]
+                lat_sec = matches[2][0]
+                puts lat_deg
+                puts lat_min
+                puts lat_sec
               end
               if(td_count == 6)
                 lon_dir = td.inner_html[0]
-                lon_deg = td.inner_html[2..3]
-                lon_min = td.inner_html[6..7]
-                lon_sec = td.inner_html[10..11]
+                matches = td.inner_html.scan(/(\d+)/)
+                lon_deg = matches[0][0]
+                lon_min = matches[1][0]
+                lon_sec = matches[2][0]
               end
             end
             break
@@ -107,10 +113,10 @@ class ScrapersController < ApplicationController
         city = City.new(
           :name => city_name,
           :states_id => @states.length,
-          :total_area => row[7],
-          :water_area => row[8],
-          :land_area => row[9],
-          :population => population,
+          :total_area => row[9],
+          :water_area => row[10],
+          :land_area => row[11],
+          :population => row[7],
           :population_density => row[12],
           :lat_deg => lat_deg,
           :lat_min => lat_min,
@@ -128,13 +134,13 @@ class ScrapersController < ApplicationController
         end
     end
     
-    #@states.each do |state|
-    #  state.save
-    #end
+    @states.each do |state|
+      state.save
+    end
     
-    #@cities.each do |state|
-    #  state.save
-    #end
+    @cities.each do |state|
+      state.save
+    end
     
   end
   
