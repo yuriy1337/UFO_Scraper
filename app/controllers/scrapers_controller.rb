@@ -221,7 +221,7 @@ class ScrapersController < ApplicationController
                     if(td_c == 0)
                       date_time = td.at("font").at("a").inner_html.scan(/(\d+)/)
                       year = 0
-                      if(td.at("font").at("a").inner_html != "" && td.at("font").at("a").inner_html.length >5)
+                      begin
                         if(date_time[2][0].to_i >= 0 && date_time[2][0].to_i <= 11)
                           year = date_time[2][0].to_i + 2000
                         else
@@ -232,6 +232,8 @@ class ScrapersController < ApplicationController
                         else
                           occurance_time = Time.new(year,date_time[0][0], date_time[1][0])
                         end
+                      rescue
+                        #nothing much i can do, it will be nil
                       end
                       #puts occurance_time
                     end
