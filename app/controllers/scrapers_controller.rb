@@ -327,12 +327,12 @@ class ScrapersController < ApplicationController
                                             :duration => duration,
                                             :summary => summary,
                                             :post_date => post_date)
-                  puts sighting
+                  #puts sighting
                   @sightings << sighting
                   #puts tr_c
-                  if(tr_c > 10)
-                    break
-                  end
+                  #if(tr_c > 10)
+                  #  break
+                  #end
                   tr_c = tr_c + 1
                 end
               end
@@ -341,9 +341,9 @@ class ScrapersController < ApplicationController
           td_count = td_count + 1
         end
         tr_count = tr_count + 1
-        if(tr_count % 4 == 0) 
-          #puts tr_count
-          break
+        if(tr_count % 10 == 0) 
+          puts tr_count
+          #break
         end
       end
     end
