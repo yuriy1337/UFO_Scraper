@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  occurance_time: 2011-10-22 12:42:01
+  cities_id: 1
+  shape: MyString
+  duration: 1
+  summary: MyText
+  post_date: 2011-10-22
+
+two:
+  occurance_time: 2011-10-22 12:42:01
+  cities_id: 1
+  shape: MyString
+  duration: 1
+  summary: MyText
+  post_date: 2011-10-22

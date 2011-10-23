@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111021012131) do
+ActiveRecord::Schema.define(:version => 20111022174201) do
 
   create_table "airports", :force => true do |t|
     t.string   "icao"
@@ -56,11 +56,23 @@ ActiveRecord::Schema.define(:version => 20111021012131) do
     t.datetime "updated_at"
   end
 
+  create_table "sightings", :force => true do |t|
+    t.datetime "occurance_time"
+    t.integer  "cities_id"
+    t.string   "shape"
+    t.integer  "duration"
+    t.text     "summary"
+    t.date     "post_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "states", :force => true do |t|
     t.text     "name"
     t.text     "abbr"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "num_of_sightings"
   end
 
 end

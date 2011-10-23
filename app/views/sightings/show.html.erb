@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Occurance time:</b>
+  <%= @sighting.occurance_time %>
+</p>
+
+<p>
+  <b>Cities:</b>
+  <%= @sighting.cities_id %>
+</p>
+
+<p>
+  <b>Shape:</b>
+  <%= @sighting.shape %>
+</p>
+
+<p>
+  <b>Duration:</b>
+  <%= @sighting.duration %>
+</p>
+
+<p>
+  <b>Summary:</b>
+  <%= @sighting.summary %>
+</p>
+
+<p>
+  <b>Post date:</b>
+  <%= @sighting.post_date %>
+</p>
+
+
+<%= link_to 'Edit', edit_sighting_path(@sighting) %> |
+<%= link_to 'Back', sightings_path %>

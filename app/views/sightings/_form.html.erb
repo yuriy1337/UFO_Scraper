@@ -1,0 +1,41 @@
+<%= form_for(@sighting) do |f| %>
+  <% if @sighting.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@sighting.errors.count, "error") %> prohibited this sighting from being saved:</h2>
+
+      <ul>
+      <% @sighting.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :occurance_time %><br />
+    <%= f.datetime_select :occurance_time %>
+  </div>
+  <div class="field">
+    <%= f.label :cities_id %><br />
+    <%= f.text_field :cities_id %>
+  </div>
+  <div class="field">
+    <%= f.label :shape %><br />
+    <%= f.text_field :shape %>
+  </div>
+  <div class="field">
+    <%= f.label :duration %><br />
+    <%= f.text_field :duration %>
+  </div>
+  <div class="field">
+    <%= f.label :summary %><br />
+    <%= f.text_area :summary %>
+  </div>
+  <div class="field">
+    <%= f.label :post_date %><br />
+    <%= f.date_select :post_date %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

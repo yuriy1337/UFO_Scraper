@@ -1,4 +1,3 @@
-$KCODE = "UTF-8"
 class ScrapersController < ApplicationController
   require 'csv'
   require 'net/http'
@@ -35,7 +34,7 @@ class ScrapersController < ApplicationController
           puts "State: #{row[2]}"
           state_name = row[2]
           state = State.new(:name => row[2])
-          if(@states.length == 50)
+          if(@states.length == 51)
             break
           end
           @states << state
@@ -96,7 +95,7 @@ class ScrapersController < ApplicationController
                 lat_sec = matches[2][0]
               end
               if(td_count == 6)
-                lon_dir = td.inner_html[0]
+                lon_dir image.inner_html[0]
                 matches = td.inner_html.scan(/(\d+)/)
                 lon_deg = matches[0][0]
                 lon_min = matches[1][0]
@@ -128,6 +127,7 @@ class ScrapersController < ApplicationController
           @cities << city
         if(count % 10 == 0)
           puts count
+          break
         end
     end
     
@@ -141,27 +141,206 @@ class ScrapersController < ApplicationController
     
   end
   
-  def airport_scaper
-    #@airports = Array.new
+  def airport_scraper
+    @airports = Array.new
     #@cities = City.all
-    
-    #CSV.foreach("data/DEC_10_SF1_GCTPH1.ST13.csv") do |row|
-    #  if(row[4].eql("USA"))
-    #    next
-    #  else
-        #@cities.each do |city|
-          #city_id = nil
-          #if(city.name.downcase.eql(row[3].downcase)
-          #  city_id = city.id
-          #end
-        #end
-        #airport = Airport.new(
-        #  :icao => row[0],
-        #  :iata => row[1],
-        #  :name => row[2],
-        #)
-    #end
+    puts "hi"
+    CSV.foreach("data/GlobalAirportDatabase.txt") do |row|
+      if(row[4].eql?("USA"))
+        @cities.each do |city|
+          city_id = nil
+          if(city.name.downcase.eql(row[3].downcase))
+            city_id = city.id
+          end
+        end
+        airport = Airport.new(
+          :icao => row[0],
+          :iata => row[1],
+          :name => row[2],
+          :cities_id => city_id,
+          :lat_deg => row[5],
+          :lat_min => row[6],
+          :lat_sec => row[7],
+          :lat_dir => row[8],
+          :lon_deg => row[9],
+          :lon_min => row[10],
+          :lon_sec => row[11],
+          :lon_dir => row[12],
+          :altitude => row[13],
+        ) 
+      else
+        next
+     end
+    end
   end
+  
+  def sighting_scraper
+    @states = State.all
+    @cities = City.all
+    @sightings = Array.new
+    @to_19 = [ "zero",  "one",   "two",  "three", "four",   "five",   "six",
+        "seven", "eight", "nine", "ten",   "eleven", "twelve", "thirteen",
+        "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" ]
+        
+    @tens  = [ "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+    sighting_info_url = "http://www.nuforc.org/webreports/"
+    
+    sightings_html = Net::HTTP.get(URI.parse("http://www.nuforc.org/webreports/ndxloc.html"))
+    @sightings_doc = Hpricot(sightings_html)
+    
+    @sightings_doc.search("//table") do |table|
+      tr_count = 0 
+      table.search("//tr") do |tr|
+        td_count = 0
+        tr.search("//td") do |td|
+          if(td_count == 0)
+            font = td.at("font")
+            state_name = font.at("a").inner_html
+            state = @states.detect { |h| h[:name].downcase == state_name.downcase }
+            if(!state.nil?)
+              state_id = state.id 
+              state_url = ""
+              
+              font.search("a").map {|e| state_url = e.get_attribute("href") }
+              puts state_url
+              
+              sightings_info_html = Net::HTTP.get(URI.parse(sighting_info_url + state_url))
+              @sightings_info_doc = Hpricot(sightings_info_html)
+              
+              @sightings_info_doc.search("//table") do |table|
+                table.at("tbody").search("//tr") do |tr|
+                  td_c = 0
+                  tr.search("//td") do |td|
+                    occurance_time = nil
+                    cities_id = nil
+                    shape = ""
+                    duration = 0.0
+                    summary = ""
+                    post_date = nil
+                    puts td.inner_html
+                    if(td_c == 0)
+                      date_time = td.at("font").at("a").inner_html.scan(/(\d+)/)
+                      year = 0
+                      if(td.at("font").at("a").inner_html != "" && td.at("font").at("a").inner_html.length >5)
+                        if(date_time[2][0].to_i >= 0 && date_time[2][0].to_i <= 11)
+                          year = date_time[2][0].to_i + 2000
+                        else
+                          year = date_time[2][0].to_i + 1900
+                        end
+                        if(td.at("font").at("a").inner_html.length > 8)
+                          occurance_time = Time.new(year,date_time[0][0], date_time[1][0], date_time[3][0], date_time[4][0])
+                        else
+                          occurance_time = Time.new(year,date_time[0][0], date_time[1][0])
+                        end
+                      end
+                      #puts occurance_time
+                    end
+                    if(td_c == 1)
+                      
+                      city_name = td.at("font").inner_html.gsub(/ \(.*\)/,'')
+                      city = @cities.detect { |h| h[:name] == city_name.strip && h[:state_id] == state_id}
+                      if(!city.nil?)
+                        city_id = city.id
+                      end
+                    end
+                    if(td_c == 3)
+                      shape = td.at("font").inner_html
+                      if(shape.include?("<br />"))
+                        shape = ""
+                      end
+                    end
+                    if(td_c == 4)
+                      puts "!!!!"
+                      d_str = td.at("font").inner_html.downcase
+                      #puts d_str
+                      numbers = d_str.scan(/(\d+)/)
+                      numbers.each do |n|
+                        duration = duration + n[0].to_f
+                      end
+                      if(numbers.length > 0)
+                        duration = duration/numbers.length
+                      else
+                        @tens.each_with_index do |str, i|
+                          if(d_str.include?(str))
+                            duration += (i + 2) * 10
+                            break
+                          end
+                        end
+                        @to_19.each_with_index do |str, i|
+                          if(d_str.include?(str))
+                            duration += i
+                            break
+                          end
+                        end
+                        if(duration == 0)
+                          duration = 1.0
+                        end
+                        #puts "found string duration:"
+                        #puts duration
+                        #puts "end found"
+                      end
+                      
+                      if(d_str.include?("min"))
+                        duration = duration * 60
+                      end
+                      
+                      if(d_str.include?("hour") || d_str.include?("hr"))
+                        duration = duration * 3600
+                      end
+                      
+                      if(d_str.include?("day"))
+                        duration = duration * 86400
+                      end
+                      
+                      if(d_str.include?("week"))
+                        duration = duration * 604800
+                      end
+                      #puts duration
+                      if (duration.infinite? != nil)
+                        return
+                      end
+                    end
+                    if(td_c == 5)
+                      summary = td.at("font").inner_html
+                    end
+                    if(td_c == 6)
+                      date = td.at("font").inner_html.scan(/(\d+)/)
+                      year = 0
+                      if(date[2][0].to_i >= 0 && date[2][0].to_i <= 11)
+                        year = date[2][0].to_i + 2000
+                      else
+                        year = date[2][0].to_i + 1900
+                      end
+                        posted_date = Time.new(year,date[0][0], date[1][0])
+                    end
+                    sighting = Sighting.new(:occurance_time => occurance_time,
+                                            :cities_id => city_id,
+                                            :shape => shape,
+                                            :duration => duration,
+                                            :summary => summary,
+                                            :post_date => posted_date)
+                    @sightings << sighting
+                    td_c = td_c + 1
+                  end
+                end
+              end
+            end
+          end
+          td_count = td_count + 1
+        end
+        tr_count = tr_count + 1
+        if(tr_count % 10 == 0) 
+          puts tr_count
+        end
+      end
+    end
+    
+    @sightings.each do |s|
+      s.save
+    end
+    
+  end
+  
   
   def index
     @scrapers = Scraper.all

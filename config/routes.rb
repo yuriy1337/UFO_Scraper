@@ -1,8 +1,15 @@
 UFOScraper::Application.routes.draw do
   
-  resources :airports
+  
+
+  resources :sightings
 
   match 'scrapers/city_scraper', :to => 'scrapers#city_scraper'
+  match 'scrapers/airport_scraper', :to => 'scrapers#airport_scraper'
+  match 'scrapers/sighting_scraper', :to => 'scrapers#sighting_scraper'
+  
+  resources :airports
+  
   resources :scrapers
 
   resources :cities
