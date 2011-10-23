@@ -48,7 +48,8 @@ class ScrapersController < ApplicationController
           next
         end
         
-        city_name = city_name.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ CDP/,'').gsub(/ City/,'')
+        city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
+        city_name.capitalize!
         #puts "#{city_name} #{count}"
         
         city_name_uri = URI.escape(city_name, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
@@ -199,6 +200,7 @@ class ScrapersController < ApplicationController
             state = @states.detect { |h| h[:name].downcase == state_name.downcase }
             if(!state.nil?)
               state_id = state.id 
+              puts "state_id= #{state_id}"
               state_url = ""
               
               font.search("a").map {|e| state_url = e.get_attribute("href") }
@@ -207,19 +209,20 @@ class ScrapersController < ApplicationController
               sightings_info_html = Net::HTTP.get(URI.parse(sighting_info_url + state_url))
               @sightings_info_doc = Hpricot(sightings_info_html)
               
-              @sightings_info_doc.search("//table") do |table|
-                table.at("tbody").search("//tr") do |tr|
+              @sightings_info_doc.search("//table") do |table2|
+                tr_c = 0
+                table2.at("tbody").search("//tr") do |tr2|
                   td_c = 0
-                  tr.search("//td") do |td|
-                    occurance_time = nil
-                    cities_id = nil
-                    shape = ""
-                    duration = 0.0
-                    summary = ""
-                    post_date = nil
-                    puts td.inner_html
+                  occurance_time = nil
+                  cities_id = nil
+                  shape = ""
+                  duration = 0.0
+                  summary = ""
+                  post_date = nil
+                  tr2.search("//td") do |td2|
+                    #puts td2.inner_html
                     if(td_c == 0)
-                      date_time = td.at("font").at("a").inner_html.scan(/(\d+)/)
+                      date_time = td2.at("font").at("a").inner_html.scan(/(\d+)/)
                       year = 0
                       begin
                         if(date_time[2][0].to_i >= 0 && date_time[2][0].to_i <= 11)
@@ -227,7 +230,7 @@ class ScrapersController < ApplicationController
                         else
                           year = date_time[2][0].to_i + 1900
                         end
-                        if(td.at("font").at("a").inner_html.length > 8)
+                        if(td2.at("font").at("a").inner_html.length > 8)
                           occurance_time = Time.new(year,date_time[0][0], date_time[1][0], date_time[3][0], date_time[4][0])
                         else
                           occurance_time = Time.new(year,date_time[0][0], date_time[1][0])
@@ -239,21 +242,22 @@ class ScrapersController < ApplicationController
                     end
                     if(td_c == 1)
                       
-                      city_name = td.at("font").inner_html.gsub(/ \(.*\)/,'')
-                      city = @cities.detect { |h| h[:name] == city_name.strip && h[:state_id] == state_id}
+                      city_name = td2.at("font").inner_html.gsub(/ \(.*\)/,'')
+                      city = @cities.detect { |h| h[:name].downcase.include?(city_name.downcase.strip) && h[:states_id] == state_id}
+                      puts city_name
                       if(!city.nil?)
-                        city_id = city.id
+                        cities_id = city.id
                       end
                     end
                     if(td_c == 3)
-                      shape = td.at("font").inner_html
+                      shape = td2.at("font").inner_html
                       if(shape.include?("<br />"))
                         shape = ""
                       end
                     end
                     if(td_c == 4)
-                      puts "!!!!"
-                      d_str = td.at("font").inner_html.downcase
+                      #puts "!!!!"
+                      d_str = td2.at("font").inner_html.downcase
                       #puts d_str
                       numbers = d_str.scan(/(\d+)/)
                       numbers.each do |n|
@@ -303,27 +307,33 @@ class ScrapersController < ApplicationController
                       end
                     end
                     if(td_c == 5)
-                      summary = td.at("font").inner_html
+                      summary = td2.at("font").inner_html
                     end
                     if(td_c == 6)
-                      date = td.at("font").inner_html.scan(/(\d+)/)
+                      date = td2.at("font").inner_html.scan(/(\d+)/)
                       year = 0
                       if(date[2][0].to_i >= 0 && date[2][0].to_i <= 11)
                         year = date[2][0].to_i + 2000
                       else
                         year = date[2][0].to_i + 1900
                       end
-                        posted_date = Time.new(year,date[0][0], date[1][0])
+                        post_date = Time.new(year,date[0][0], date[1][0])
                     end
-                    sighting = Sighting.new(:occurance_time => occurance_time,
-                                            :cities_id => city_id,
+                    td_c = td_c + 1
+                  end
+                  sighting = Sighting.new(:occurance_time => occurance_time,
+                                            :cities_id => cities_id,
                                             :shape => shape,
                                             :duration => duration,
                                             :summary => summary,
-                                            :post_date => posted_date)
-                    @sightings << sighting
-                    td_c = td_c + 1
+                                            :post_date => post_date)
+                  puts sighting
+                  @sightings << sighting
+                  #puts tr_c
+                  if(tr_c > 10)
+                    break
                   end
+                  tr_c = tr_c + 1
                 end
               end
             end
@@ -331,8 +341,9 @@ class ScrapersController < ApplicationController
           td_count = td_count + 1
         end
         tr_count = tr_count + 1
-        if(tr_count % 10 == 0) 
-          puts tr_count
+        if(tr_count % 4 == 0) 
+          #puts tr_count
+          break
         end
       end
     end
