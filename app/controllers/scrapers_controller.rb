@@ -96,7 +96,7 @@ class ScrapersController < ApplicationController
                 lat_sec = matches[2][0]
               end
               if(td_count == 6)
-                lon_dir image.inner_html[0]
+                lon_dir = td.inner_html[0]
                 matches = td.inner_html.scan(/(\d+)/)
                 lon_deg = matches[0][0]
                 lon_min = matches[1][0]
