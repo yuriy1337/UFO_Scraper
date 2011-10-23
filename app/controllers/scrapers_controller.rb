@@ -49,7 +49,7 @@ class ScrapersController < ApplicationController
         end
         
         city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
-        city_name.capitalize!
+        city_name.strip.capitalize!
         #puts "#{city_name} #{count}"
         
         city_name_uri = URI.escape(city_name, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
@@ -128,7 +128,6 @@ class ScrapersController < ApplicationController
           @cities << city
         if(count % 10 == 0)
           puts count
-          break
         end
     end
     
