@@ -144,34 +144,48 @@ class ScrapersController < ApplicationController
   
   def airport_scraper
     @airports = Array.new
-    #@cities = City.all
+    @cities = City.all
     puts "hi"
+	count = 0
     CSV.foreach("data/GlobalAirportDatabase.txt") do |row|
-      if(row[4].eql?("USA"))
-        @cities.each do |city|
-          city_id = nil
-          if(city.name.downcase.eql(row[3].downcase))
-            city_id = city.id
-          end
-        end
-        airport = Airport.new(
-          :icao => row[0],
-          :iata => row[1],
-          :name => row[2],
-          :cities_id => city_id,
-          :lat_deg => row[5],
-          :lat_min => row[6],
-          :lat_sec => row[7],
-          :lat_dir => row[8],
-          :lon_deg => row[9],
-          :lon_min => row[10],
-          :lon_sec => row[11],
-          :lon_dir => row[12],
-          :altitude => row[13],
-        ) 
+      if(row[4].eql?("USA") && row[5].to_i != 0)
+        #@cities.each do |city|
+        #  city_id = nil
+        #  if(city.name.downcase.eql(row[3].downcase))
+        #    city_id = city.id
+        #  end
+        #end
+		city_name = row[3]
+		city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
+		
+		city = @cities.detect { |h| h[:name].downcase == city_name && h[:lat_deg] == row[5].to_i && h[:lon_deg] == row[9].to_i}
+		puts "#{city_name} #{row[5]} #{row[9]}" 
+		
+		if(!city.nil?)
+			puts "#{city.id} #{city.name}"
+			airport = Airport.new(
+			  :icao => row[0],
+			  :iata => row[1],
+			  :name => row[2],
+			  :cities_id => city.id,
+			  :lat_deg => row[5],
+			  :lat_min => row[6],
+			  :lat_sec => row[7],
+			  :lat_dir => row[8],
+			  :lon_deg => row[9],
+			  :lon_min => row[10],
+			  :lon_sec => row[11],
+			  :lon_dir => row[12],
+			  :altitude => row[13],
+			) 
+		end
       else
         next
      end
+	 if(count > 10)
+		#break
+	end
+	count = count + 1
     end
   end
   
