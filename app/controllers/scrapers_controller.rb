@@ -50,6 +50,7 @@ class ScrapersController < ApplicationController
         
         city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
         city_name.strip.capitalize!
+        city_name = city_name.capitalize
         #puts "#{city_name} #{count}"
         
         city_name_uri = URI.escape(city_name, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
