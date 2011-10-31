@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(:version => 20111031212211) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "airport_id"
-    t.integer  "airport_distance"
+    t.decimal  "airport_distance"
   end
 
   create_table "states", :force => true do |t|
