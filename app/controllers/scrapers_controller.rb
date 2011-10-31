@@ -471,7 +471,7 @@ class ScrapersController < ApplicationController
       city = @cities.detect { |h| h[:id] == s.cities_id }
        if(!city.nil?)
          @airports.each do |a|
-           dist = haversine_distance(city.lat, city.lon, a.lat, a.lon)
+           dist = haversine_distance(city.lat, (-city.lon), a.lat, (-a.lon))
            if(dist < min_distance)
              min_distance = dist
              min_distance_id = a.id 

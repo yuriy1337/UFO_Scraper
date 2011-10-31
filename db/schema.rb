@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(:version => 20111031212211) do
     t.string   "shape_categories_id"
     t.integer  "duration"
     t.text     "summary"
-    t.date     "post_date"
+    t.date     "post_date"g
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "airport_id"
