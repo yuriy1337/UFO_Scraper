@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  nws: MyString
+  states_id: 1
+  cities_id: 1
+  name: MyText
+  lat_deg: 1
+  lat_min: 1
+  lat_sec: 1
+  lat_dir: MyString
+  lon_deg: 1
+  lon_min: 1
+  lon_sec: 1
+  lon_dir: MyString
+  elevation: 1
+
+two:
+  nws: MyString
+  states_id: 1
+  cities_id: 1
+  name: MyText
+  lat_deg: 1
+  lat_min: 1
+  lat_sec: 1
+  lat_dir: MyString
+  lon_deg: 1
+  lon_min: 1
+  lon_sec: 1
+  lon_dir: MyString
+  elevation: 1

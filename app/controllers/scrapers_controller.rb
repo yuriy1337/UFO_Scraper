@@ -155,31 +155,33 @@ class ScrapersController < ApplicationController
         #    city_id = city.id
         #  end
         #end
-		city_name = row[3]
-		city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
-		
-		city = @cities.detect { |h| h[:name].downcase == city_name && h[:lat_deg] == row[5].to_i && h[:lon_deg] == row[9].to_i}
-		puts "#{city_name} #{row[5]} #{row[9]}" 
-		
-		if(!city.nil?)
-			puts "#{city.id} #{city.name}"
-			airport = Airport.new(
-			  :icao => row[0],
-			  :iata => row[1],
-			  :name => row[2],
-			  :cities_id => city.id,
-			  :lat_deg => row[5],
-			  :lat_min => row[6],
-			  :lat_sec => row[7],
-			  :lat_dir => row[8],
-			  :lon_deg => row[9],
-			  :lon_min => row[10],
-			  :lon_sec => row[11],
-			  :lon_dir => row[12],
-			  :altitude => row[13],
-			) 
-		end
-      else
+  		city_name = row[3]
+  		city_name = city_name.downcase.gsub(/ city/,'').gsub(/ town/,'').gsub(/ village/,'').gsub(/ cdp/,'').gsub(/ borough/,'').gsub(/ municipality/,'').gsub(/ and/,'')
+  		
+  		city = @cities.detect { |h| h[:name].downcase == city_name && h[:lat_deg] == row[5].to_i && h[:lon_deg] == row[9].to_i}
+  		puts "#{city_name} #{row[5]} #{row[9]}" 
+  		
+  		city_id = nil
+  		if(!city.nil?)
+  		    city_id = city.id
+  	  end
+  		airport = Airport.new(
+  		  :icao => row[0],
+  		  :iata => row[1],
+  		  :name => row[2],
+  		  :cities_id => city_id,
+  		  :lat_deg => row[5],
+  		  :lat_min => row[6],
+  		  :lat_sec => row[7],
+  		  :lat_dir => row[8],
+  		  :lon_deg => row[9],
+  			:lon_min => row[10],
+  			:lon_sec => row[11],
+  			:lon_dir => row[12],
+  			:altitude => row[13],
+  	 ) 
+  	 @airports << airport
+     else
         next
      end
 	 if(count > 10)
@@ -187,6 +189,11 @@ class ScrapersController < ApplicationController
 	end
 	count = count + 1
     end
+    
+    @airports.each do |airport|
+      airport.save
+    end
+    
   end
   
   def sighting_scraper
@@ -229,7 +236,7 @@ class ScrapersController < ApplicationController
                   td_c = 0
                   occurance_time = nil
                   cities_id = nil
-                  shape = ""
+                  shape_categories_id = nil
                   duration = 0.0
                   summary = ""
                   post_date = nil
@@ -265,8 +272,42 @@ class ScrapersController < ApplicationController
                     end
                     if(td_c == 3)
                       shape = td2.at("font").inner_html
-                      if(shape.include?("<br />"))
-                        shape = ""
+                      shape = shape.downcase
+                      if(shape.include?("light") || shape.include?("flash") || shape.include?("flare"))
+                        shape_categories_id = 1
+                      end
+                      if(shape.include?("<br />") || shape.include?("unknown") || shape.include?("other"))
+                        shape_categories_id = 2
+                      end
+                      if(shape.include?("circle") || shape.include?("round") || shape.include?("crescent") || shape.include?("dome"))
+                        shape_categories_id = 3
+                      end
+                      if(shape.include?("triangle") || shape.include?("chevron") || shape.include?("cone") || shape.include?("delta") || shape.include?("pyramid"))
+                        shape_categories_id = 4
+                      end
+                      if(shape.include?("disk"))
+                        shape_categories_id = 5
+                      end
+                      if(shape.include?("fireball") || shape.include?("teardrop"))
+                        shape_categories_id = 6
+                      end
+                      if(shape.include?("oval") || shape.include?("egg"))
+                        shape_categories_id = 7
+                      end
+                      if(shape.include?("cigar") || shape.include?("cylinder"))
+                        shape_categories_id = 8
+                      end
+                      if(shape.include?("rectangle") || shape.include?("diamond") || shape.include?("hexagon") || shape.include?("cross"))
+                        shape_categories_id = 9
+                      end
+                      if(shape.include?("formation"))
+                        shape_categories_id = 10
+                      end
+                      if(shape.include?("changing") || shape.include?("changed"))
+                        shape_categories_id = 11
+                      end
+                      if(shape_categories_id.nil?)
+                        shape_categories_id = 2
                       end
                     end
                     if(td_c == 4)
@@ -317,6 +358,7 @@ class ScrapersController < ApplicationController
                       end
                       #puts duration
                       if (duration.infinite? != nil)
+                        puts "Duration is infinite"
                         return
                       end
                     end
@@ -337,7 +379,7 @@ class ScrapersController < ApplicationController
                   end
                   sighting = Sighting.new(:occurance_time => occurance_time,
                                             :cities_id => cities_id,
-                                            :shape => shape,
+                                            :shape_categories_id => shape_categories_id,
                                             :duration => duration,
                                             :summary => summary,
                                             :post_date => post_date)
@@ -368,6 +410,101 @@ class ScrapersController < ApplicationController
     
   end
   
+  def weatherstation_scraper
+    @states = State.all
+    @cities = City.all
+    @weather_stations = Array.new
+    count = 0
+    CSV.foreach("data/COOP-ACT.csv") do |row|
+      state = @states.detect { |h| h[:abbr].downcase == row[3].downcase }
+      city = @cities.detect { |h| h[:name].downcase == row[6].downcase }
+      city_id = nil
+      if(!city.nil?)
+        city_id = city.id
+      end
+      ws = WeatherStation.new(
+        :nws => row[1],
+        :states_id => state.id,
+        :cities_id => city_id,
+        :name => row[6],
+        :lat_deg => row[7].to_i,
+        :lat_min => row[8].to_i,
+        :lat_sec => row[9].to_i,
+        :lat_dir => "N",
+        :lon_deg => row[10].to_i.abs,
+        :lon_min => row[11].to_i,
+        :lon_sec => row[12].to_i,
+        :lon_dir => "W",
+        :elevation => row[13],
+      )
+      if(count % 100 == 0)
+        puts count
+      end
+      count = count + 1
+      @weather_stations << ws
+    end
+    
+    WeatherStation.transaction do
+      @weather_stations.each do |ws|
+        ws.save
+      end
+    end
+    
+  end
+  
+  
+  def sighting_airport_distance
+    @sightings = Sighting.all
+    @cities = City.all
+    @airports = Airport.all
+    
+    min_distance = 999999999
+    min_distance_id = 0
+    @sightings.each do |s|
+      city = @cities.detect { |h| h[:id] == s.cities_id }
+       if(!city.nil?)
+         @airports.each do |a|
+           dist = haversine_distance(city.lat, city.lon, a.lat, a.lon)
+           if(dist < min_distance)
+             min_distance = dist
+             min_distance_id = a.id 
+           end
+         end
+         puts min_distance
+         puts min_distance_id
+         Sighting.update(s.id, :airport_id => min_distance_id, :airport_distance => min_distance)
+       end
+    end
+  end
+  
+def haversine_distance( lat1, lon1, lat2, lon2 )
+  dlon = lon2 - lon1
+  dlat = lat2 - lat1
+  dlon_rad = dlon * RAD_PER_DEG
+  dlat_rad = dlat * RAD_PER_DEG
+  lat1_rad = lat1 * RAD_PER_DEG
+  lon1_rad = lon1 * RAD_PER_DEG
+  lat2_rad = lat2 * RAD_PER_DEG
+  lon2_rad = lon2 * RAD_PER_DEG
+
+  a = (Math.sin(dlat_rad/2))**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * (Math.sin(dlon_rad/2))**2
+  
+  c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
+  
+   
+  
+  dMi = Rmiles * c          # delta between the two points in miles
+  #dKm = Rkm * c             # delta in kilometers
+  #dFeet = Rfeet * c         # delta in feet
+  #dMeters = Rmeters * c     # delta in meters
+
+  #@distances["mi"] = dMi
+
+  #@distances["km"] = dKm
+  #@distances["ft"] = dFeet
+  #@distances["m"] = dMeters
+end
+
   
   def index
     @scrapers = Scraper.all

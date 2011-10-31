@@ -1,0 +1,23 @@
+<h1>Listing shape_categories</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @shape_categories.each do |shape_category| %>
+  <tr>
+    <td><%= shape_category.name %></td>
+    <td><%= link_to 'Show', shape_category %></td>
+    <td><%= link_to 'Edit', edit_shape_category_path(shape_category) %></td>
+    <td><%= link_to 'Destroy', shape_category, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Shape category', new_shape_category_path %>

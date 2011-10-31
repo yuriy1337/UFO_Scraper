@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Nws:</b>
+  <%= @weather_station.nws %>
+</p>
+
+<p>
+  <b>States:</b>
+  <%= @weather_station.states_id %>
+</p>
+
+<p>
+  <b>Cities:</b>
+  <%= @weather_station.cities_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @weather_station.name %>
+</p>
+
+<p>
+  <b>Lat deg:</b>
+  <%= @weather_station.lat_deg %>
+</p>
+
+<p>
+  <b>Lat min:</b>
+  <%= @weather_station.lat_min %>
+</p>
+
+<p>
+  <b>Lat sec:</b>
+  <%= @weather_station.lat_sec %>
+</p>
+
+<p>
+  <b>Lat dir:</b>
+  <%= @weather_station.lat_dir %>
+</p>
+
+<p>
+  <b>Lon deg:</b>
+  <%= @weather_station.lon_deg %>
+</p>
+
+<p>
+  <b>Lon min:</b>
+  <%= @weather_station.lon_min %>
+</p>
+
+<p>
+  <b>Lon sec:</b>
+  <%= @weather_station.lon_sec %>
+</p>
+
+<p>
+  <b>Lon dir:</b>
+  <%= @weather_station.lon_dir %>
+</p>
+
+<p>
+  <b>Elevation:</b>
+  <%= @weather_station.elevation %>
+</p>
+
+
+<%= link_to 'Edit', edit_weather_station_path(@weather_station) %> |
+<%= link_to 'Back', weather_stations_path %>

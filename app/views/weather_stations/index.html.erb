@@ -1,0 +1,47 @@
+<h1>Listing weather_stations</h1>
+
+<table>
+  <tr>
+    <th>Nws</th>
+    <th>States</th>
+    <th>Cities</th>
+    <th>Name</th>
+    <th>Lat deg</th>
+    <th>Lat min</th>
+    <th>Lat sec</th>
+    <th>Lat dir</th>
+    <th>Lon deg</th>
+    <th>Lon min</th>
+    <th>Lon sec</th>
+    <th>Lon dir</th>
+    <th>Elevation</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @weather_stations.each do |weather_station| %>
+  <tr>
+    <td><%= weather_station.nws %></td>
+    <td><%= weather_station.states_id %></td>
+    <td><%= weather_station.cities_id %></td>
+    <td><%= weather_station.name %></td>
+    <td><%= weather_station.lat_deg %></td>
+    <td><%= weather_station.lat_min %></td>
+    <td><%= weather_station.lat_sec %></td>
+    <td><%= weather_station.lat_dir %></td>
+    <td><%= weather_station.lon_deg %></td>
+    <td><%= weather_station.lon_min %></td>
+    <td><%= weather_station.lon_sec %></td>
+    <td><%= weather_station.lon_dir %></td>
+    <td><%= weather_station.elevation %></td>
+    <td><%= link_to 'Show', weather_station %></td>
+    <td><%= link_to 'Edit', edit_weather_station_path(weather_station) %></td>
+    <td><%= link_to 'Destroy', weather_station, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Weather station', new_weather_station_path %>
