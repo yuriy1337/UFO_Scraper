@@ -4,6 +4,13 @@ class ScrapersController < ApplicationController
   require 'uri'
   require 'hpricot'
   
+  RAD_PER_DEG = 0.017453293  #  PI/180
+  Rmiles = 3956           # radius of the great circle in miles
+  Rkm = 6371              # radius in kilometers...some algorithms use 6367
+  Rfeet = Rmiles * 5282   # radius in feet
+  Rmeters = Rkm * 1000    # radius in meters
+
+  
   # GET /scrapers
   # GET /scrapers.xml
   

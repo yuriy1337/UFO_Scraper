@@ -1,7 +1,7 @@
 class AddAirportIdAndAirportDistanceToSightings < ActiveRecord::Migration
   def self.up
     add_column :sightings, :airport_id, :integer
-    add_column :sightings, :airport_distance, :integer
+    add_column :sightings, :airport_distance, :decimal
   end
 
   def self.down
