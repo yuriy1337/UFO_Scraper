@@ -480,6 +480,8 @@ class ScrapersController < ApplicationController
          puts min_distance
          puts min_distance_id
          Sighting.update(s.id, :airport_id => min_distance_id, :airport_distance => min_distance)
+         min_distance = 999999999
+         puts min_distance_id = 0
        end
     end
   end
