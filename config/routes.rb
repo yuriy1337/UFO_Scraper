@@ -8,6 +8,7 @@ UFOScraper::Application.routes.draw do
 
   resources :sightings
 
+  match 'scrapers/sighting_ws_distance', :to => 'scrapers#sighting_ws_distance'
   match 'scrapers/sighting_airport_distance', :to => 'scrapers#sighting_airport_distance'
   match 'scrapers/weatherstation_scraper', :to => 'scrapers#weatherstation_scraper'
   match 'scrapers/city_scraper', :to => 'scrapers#city_scraper'

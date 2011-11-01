@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111031212211) do
+ActiveRecord::Schema.define(:version => 20111101125430) do
 
   create_table "airports", :force => true do |t|
     t.decimal  "lon"
@@ -72,11 +72,13 @@ ActiveRecord::Schema.define(:version => 20111031212211) do
     t.string   "shape_categories_id"
     t.integer  "duration"
     t.text     "summary"
-    t.date     "post_date"g
+    t.date     "post_date"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "airport_id"
     t.decimal  "airport_distance"
+    t.integer  "ws_id"
+    t.decimal  "ws_distance"
   end
 
   create_table "states", :force => true do |t|

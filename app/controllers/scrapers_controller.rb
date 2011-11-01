@@ -486,6 +486,33 @@ class ScrapersController < ApplicationController
     end
   end
   
+  
+  def sighting_ws_distance
+    @sightings = Sighting.all
+    @cities = City.all
+    @wss = WeatherStation.all
+    
+    min_distance = 999999999
+    min_distance_id = 0
+    @sightings.each do |s|
+      city = @cities.detect { |h| h[:id] == s.cities_id }
+       if(!city.nil?)
+         @wss.each do |ws|
+           dist = haversine_distance(city.lat, (-city.lon), ws.lat, (-ws.lon))
+           if(dist < min_distance)
+             min_distance = dist
+             min_distance_id = ws.id 
+           end
+         end
+         puts min_distance
+         puts min_distance_id
+         WeatherStation.update(s.id, :ws_id => min_distance_id, :ws_distance => min_distance)
+         min_distance = 999999999
+         min_distance_id = 0
+       end
+    end
+  end
+  
 def haversine_distance( lat1, lon1, lat2, lon2 )
   dlon = lon2 - lon1
   dlat = lat2 - lat1
